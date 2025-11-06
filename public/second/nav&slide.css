@@ -1,0 +1,219 @@
+.top-container {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+body {
+  height: 200vh;
+}
+.nav {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: space-around;
+  height: 27.5px;
+}
+
+.links {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.logoImg {
+  margin-left: 10px;
+  height: 24px;
+  width: 24px;
+  cursor: pointer;
+}
+
+.logo {
+  margin-left: 15px;
+  font-weight: 300;
+}
+
+.navLink {
+  display: flex;
+  list-style-type: none;
+  box-sizing: content-box;
+  margin-bottom: 6px;
+  gap: 25px;
+
+  font-weight: 300;
+}
+
+.linkItself {
+  text-decoration: none;
+  color: black;
+  font-size: 10px;
+}
+.linkItself-dark {
+  text-decoration: none;
+  color: rgb(255, 251, 251);
+  font-size: 10px;
+}
+.navLinkDark {
+  display: flex;
+  list-style-type: none;
+  box-sizing: content-box;
+  margin-bottom: 6px;
+  gap: 25px;
+  font-weight: 300;
+  color: rgb(255, 255, 255);
+}
+
+.linkItself:hover {
+  color: cadetblue;
+}
+.linkItself-dark:hover {
+  color: rgb(140, 215, 218);
+}
+.navBtn {
+  font-size: 9px;
+  border: none;
+  width: 35px;
+  height: 15px;
+  margin-left: 15px;
+  margin-right: 12px;
+  text-decoration: underline rgb(0, 0, 0);
+  background-color: transparent;
+  font-weight: 200;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+}
+.navBtn-dark {
+  font-size: 9px;
+  border: none;
+  width: 35px;
+  height: 15px;
+  margin-left: 15px;
+  margin-right: 12px;
+  text-decoration: underline #ffffff;
+  background-color: transparent;
+  font-weight: 200;
+  color: rgb(255, 255, 255);
+}
+.navBtn:hover {
+  color: cadetblue;
+  cursor: pointer;
+}
+.navBtn-dark:hover {
+  color: cadetblue;
+}
+.svgs {
+  display: flex;
+
+  margin-top: 3px;
+  gap: 5px;
+  box-sizing: border-box;
+}
+
+.sun,
+.moon {
+  box-sizing: content-box;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  display: flex;
+  margin-bottom: 2px;
+  align-items: center;
+  justify-content: center;
+}
+.sun:hover {
+  background-color: yellow;
+  cursor: pointer;
+}
+.moon:hover {
+  background-color: rgba(0, 0, 0, 0.355);
+  cursor: pointer;
+}
+.link {
+  position: relative;
+  width: max-content;
+}
+.link::after {
+  content: " ";
+  background: black;
+  height: 1px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-radius: 100px;
+  transition: 100ms;
+}
+.link:hover::after {
+  width: 0;
+}
+.linkDark {
+  position: relative;
+  width: max-content;
+}
+.linkDark::after {
+  content: " ";
+  background: rgb(255, 255, 255);
+  height: 1px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-radius: 100px;
+  transition: 100ms;
+}
+.linkDark:hover::after {
+  width: 0;
+}
+.carousel {
+  display: flex;
+  position: relative;
+  overflow-x: hidden;
+  margin: 0;
+  width: 100%;
+  height: 10px;
+}
+
+.wrapper {
+  display: inline-flex;
+  white-space: nowrap;
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  font-weight: 300;
+  gap: 3px;
+}
+
+.card {
+  flex: 0 0 auto;
+}
+.ham-menu {
+  display: none;
+}
+.right-menu {
+  display: flex;
+  align-items: center;
+}
+@media (max-width: 600px) {
+  .navLink,
+  .svgs {
+    display: none;
+  }
+  .logo {
+    font-size: 10px;
+  }
+  .ham-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(255, 255, 255);
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .ham-menu:hover {
+    background-color: rgb(238, 237, 237);
+    border: 0.4px solid rgb(221, 218, 218);
+  }
+}

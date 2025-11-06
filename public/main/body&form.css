@@ -1,0 +1,257 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap");
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+.dark-mode {
+  background-color: #121212;
+  color: white;
+}
+.light-mode {
+  background-color: white;
+  color: black;
+}
+body {
+  font-family: "Roboto Slab", serif;
+  overflow-x: hidden;
+  height: 200vh;
+}
+body::-webkit-scrollbar {
+  width: 2px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.brush-line {
+  display: none;
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 100%;
+  height: 130px;
+  z-index: -1;
+  transform: rotate(-26deg) translateY(80%) translateX(-80%);
+}
+
+.header-container {
+  position: absolute;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  text-align: center;
+}
+.header-container .first-head {
+  font-weight: 200;
+  font-size: 20px;
+}
+.header-container .second-head {
+  font-weight: 150;
+  font-size: 8px;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  background-color: white;
+  padding: 14px 16px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  width: 40vw;
+  max-width: 250px;
+  font-size: 7px;
+  font-weight: 350;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  margin-right: 12vw;
+}
+.container-outside-form {
+  position: absolute;
+  width: 100vw;
+  height: 60-70vh;
+  display: flex;
+  justify-content: flex-end;
+  top: max(18vh);
+  display: flex;
+  align-items: center;
+}
+
+.logIn-form-container {
+  display: none;
+  flex-direction: column;
+  gap: 11px;
+  background-color: white;
+  padding: 14px 16px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  width: 40vw;
+  max-width: 250px;
+  font-size: 7px;
+  font-weight: 350;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  margin-right: 12vw;
+}
+@media (max-width: 500px) {
+  .form-container,
+  .logIn-form-container {
+    width: 60vw;
+    margin-right: 0;
+    font-size: 8px;
+    max-width: 500px;
+  }
+  .container-outside-form {
+    position: absolute;
+    width: 100vw;
+    height: 50vh;
+
+    top: 10vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .header-container .first-head {
+    font-weight: 200;
+    font-size: 22px;
+  }
+  .header-container .second-head {
+    font-weight: 150;
+    font-size: 8px;
+  }
+  .error-msg {
+    color: red;
+    font-size: 7px;
+    display: none;
+    margin-top: 2px;
+  }
+
+  .form-header {
+    text-align: center;
+  }
+  .check-group {
+    display: flex;
+    font-size: 7px;
+  }
+
+  .check-group input[type="checkbox"] {
+    width: 6px;
+    height: 6px;
+    margin: 0;
+    accent-color: blue;
+  }
+  .check-group label {
+    margin-left: 5px;
+  }
+
+  .btn-primary {
+    padding: 8px 18px;
+    font-size: 7px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    background: rgb(64, 179, 255);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+  .not-registered p {
+    font-size: 7px;
+    margin: 0;
+  }
+}
+input {
+  width: 100%;
+  padding: 7px;
+  font-size: 7px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  font-size: 7px;
+  padding: 6px 8px;
+  -webkit-text-fill-color: #000;
+  transition: background-color 5000s ease-in-out 0s;
+}
+input:valid {
+  border-color: green;
+}
+.error-msg {
+  color: red;
+  font-size: 6px;
+  display: none;
+  margin-top: 2px;
+  margin-left: auto;
+}
+
+.form-header {
+  text-align: center;
+}
+.check-group {
+  display: flex;
+  font-size: 7px;
+}
+
+.check-group input[type="checkbox"] {
+  width: 9px;
+  height: 9px;
+  margin: 0;
+  accent-color: blue;
+}
+.check-group label {
+  margin-left: 5px;
+}
+
+.btn-primary {
+  padding: 8px 18px;
+  font-size: 7px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  background: rgb(64, 179, 255);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(90deg, rgb(183, 243, 255), rgb(145, 224, 255));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 12px rgba(154, 245, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 6px 18px rgba(162, 255, 247, 0.5);
+  }
+}
+
+.btn-primary.pulse {
+  animation: pulse 2s infinite ease-in-out;
+}
+.not-registered p {
+  font-size: 7px;
+  margin: 0;
+}

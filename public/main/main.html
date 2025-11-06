@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Main</title>
+    <link href="/main/body&form.css" rel="stylesheet" />
+    <link href="/main/fan.css" rel="stylesheet" />
+    <link href="/main/nav&slide.css" rel="stylesheet" />
+    <link href="/main/textpopUp.css" rel="stylesheet" />
+    <link href="/main/QApopup.css" rel="stylesheet" />
+    <link href="/main/sidebar.css" rel="stylesheet" />
+    <script src="/main/main.js" defer></script>
+    <script src="/main/form.js" defer></script>
+    <script src="/main/sidebar.js" defer></script>
+  </head>
+  <body>
+    <section class="top-container">
+      <nav class="nav">
+        <div class="logoImg">
+          <img src="/main/logo.png" alt="logo" height="24" width="24" />
+        </div>
+        <p class="logo">Aung San Thuriya Hla Thaung</p>
+        <div class="links">
+          <ul class="navLink">
+            <li class="link"><a class="linkItself" href="#">News</a></li>
+            <li class="link"><a class="linkItself" href="#">Community</a></li>
+            <li class="link"><a class="linkItself" href="#">Resources</a></li>
+          </ul>
+          <div class="right-menu">
+            <button id="log-in-header" class="navBtn">Log In</button>
+            <div class="ham-menu">
+              <img height="10" width="10" src="/main/menu.png" alt="menu" />
+            </div>
+          </div>
+        </div>
+        <div class="svgs">
+          <div class="sun">
+            <img src="/main/sun.png" alt="sun" height="15" width="15" />
+          </div>
+          <div class="moon">
+            <img src="/main/moon.png" alt="moon" height="15" width="15" />
+          </div>
+        </div>
+      </nav>
+      <div class="carousel">
+        <div aria-hidden class="wrapper" id="marquee">
+          <div class="card">Aung San Thuriya Hla Thaung Official</div>
+          <div class="card">Aung San Thuriya Hla Thaung Official</div>
+          <div class="card">Aung San Thuriya Hla Thaung Official</div>
+          <div class="card">Aung San Thuriya Hla Thaung Official</div>
+          <div class="card">Aung San Thuriya Hla Thaung Official</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="header-container">
+      <p class="first-head">Welcome!</p>
+      <p class="second-head">Please log-in to join Hla Thaung's community!</p>
+    </div>
+    <div class="fan">
+      <img src="/main/HlaThaungSchool-4.jpg" alt="fan1" />
+      <img src="/main/HlaThaungSchool-2.jpg" alt="fan2" />
+      <img src="/main/HlaThaungSchool-3.jpg" alt="fan3" />
+      <img src="/main/HlaThaungSchool-5.jpg" alt="fan4" />
+      <img src="/main/HlaThaungSchool-6.jpg" alt="fan5" />
+    </div>
+    <div class="container-outside-form">
+      <form class="form-container" action="">
+        <p class="form-header">Student Register Form</p>
+        <div class="input-group">
+          <label for="name">Name</label
+          ><input
+            placeholder="name (as shown in student id)"
+            type="text"
+            name="name"
+            id="name"
+            class="name"
+            autocomplete="off"
+            required
+          />
+
+          <span class="error-msg"></span>
+        </div>
+
+        <div class="input-group">
+          <label for="email">Email</label
+          ><input
+            id="email"
+            type="email"
+            name="email"
+            class="email"
+            required
+            autocomplete="off"
+            placeholder="enter your email"
+          />
+
+          <span class="error-msg"></span>
+        </div>
+
+        <div class="input-group">
+          <label for="birthdate">Birthdate </label
+          ><input
+            id="birthdate"
+            class="birthdate"
+            type="date"
+            name="birthdate"
+            required
+          />
+
+          <span class="error-msg"></span>
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password </label
+          ><input
+            placeholder="enter a 8-letter password"
+            type="password"
+            name="password"
+            id="password"
+            class="password"
+            required
+          />
+
+          <span class="error-msg"></span>
+        </div>
+
+        <div class="input-group check-group">
+          <input
+            required
+            name="agree"
+            class="agree"
+            id="checkbox"
+            type="checkbox"
+          />
+          <label for="agree" id="agree">
+            I accept the terms and conditions</label
+          ><span class="error-msg"></span>
+        </div>
+        <div class="not-registered">
+          <p>Already have an account?<a id="log-in" href="#"> Log In</a></p>
+        </div>
+
+        <button class="btn-primary" id="register-btn" type="submit">
+          Register
+        </button>
+      </form>
+
+      <form class="logIn-form-container" action="">
+        <p class="form-header">Student Log In Form</p>
+        <div class="input-group">
+          <label for="name">Name </label>
+          <input
+            id="logIn-name"
+            placeholder="name (as shown in student id)"
+            type="text"
+            name="name"
+            autocomplete="off"
+            required
+          />
+
+          <span class="error-msg"></span>
+        </div>
+
+        <div class="input-group">
+          <label for="email">Email</label
+          ><input
+            id="logIn-email"
+            type="email"
+            name="email"
+            required
+            autocomplete="off"
+            placeholder="enter your email"
+          />
+
+          <span class="error-msg"></span>
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password</label
+          ><input
+            id="logIn-password"
+            placeholder="enter a 8-letter password"
+            type="password"
+            name="password"
+            required
+          />
+
+          <span class="error-msg"></span>
+        </div>
+
+        <div class="not-registered">
+          <p>Don't have an account?<a id="register" href="#"> Register</a></p>
+        </div>
+
+        <button class="btn-primary" type="submit">Log In</button>
+      </form>
+      <svg class="brush-line" viewBox="0 0 800 400" preserveAspectRatio="none">
+        <defs>
+          <linearGradient
+            id="paint"
+            gradientUnits="userSpaceOnUse"
+            x1="0"
+            y1="0"
+            x2="800"
+            y2="0"
+          >
+            <stop offset="0%" stop-color="green" />
+            <stop offset="60%" stop-color="yellow" />
+            <stop offset="90%" stop-color="cyan" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M0,200 Q150,100 300,200 T600,200 T900,200"
+          stroke="url(#paint)"
+          stroke-width="12"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+    <div class="sidebar">
+      <div class="close-container">
+        <img
+          class="close"
+          src="/main/close.png"
+          alt="close"
+          width="10"
+          height="10"
+        />
+      </div>
+
+      <ul class="sideLinks">
+        <li class="side-link"><a href="#">News</a></li>
+        <li class="side-link"><a href="#">Community</a></li>
+        <li class="side-link"><a href="#">Resources</a></li>
+      </ul>
+    </div>
+  </body>
+</html>

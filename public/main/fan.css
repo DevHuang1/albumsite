@@ -1,0 +1,109 @@
+.fan {
+  position: absolute;
+  top: 26vh;
+  left: 2vw;
+  width: clamp(160px, 30vw, 400px);
+  height: clamp(160px, 35vw, 500px);
+  display: flex;
+  z-index: 999;
+  transform: rotate(60deg);
+  transition: transform 0.4s ease;
+  cursor: pointer;
+}
+@media (max-width: 500px) {
+  .fan {
+    display: none;
+  }
+}
+.fan img {
+  position: absolute;
+  width: 65%;
+  aspect-ratio: 1/1;
+  border-radius: 12px;
+  transform-origin: bottom center;
+  object-fit: contain;
+  transition: transform 0.4s ease, z-index 0.3s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+
+.fan img:nth-child(1) {
+  transform: rotate(-30deg) translateY(-5%);
+  z-index: 1;
+}
+.fan img:nth-child(2) {
+  transform: rotate(-15deg) translateY(-3%);
+  z-index: 2;
+}
+.fan img:nth-child(3) {
+  transform: rotate(0deg);
+  z-index: 3;
+}
+.fan img:nth-child(4) {
+  transform: rotate(15deg) translateY(-3%);
+  z-index: 2;
+}
+.fan img:nth-child(5) {
+  transform: rotate(30deg) translateY(-5%);
+  z-index: 1;
+}
+
+.fan:hover img:nth-child(1) {
+  transform: rotate(-40deg) translateY(-10%);
+}
+.fan:hover img:nth-child(2) {
+  transform: rotate(-20deg) translateY(-8%);
+}
+.fan:hover img:nth-child(3) {
+  transform: rotate(0deg) translateY(-6%);
+}
+.fan:hover img:nth-child(4) {
+  transform: rotate(20deg) translateY(-8%);
+}
+.fan:hover img:nth-child(5) {
+  transform: rotate(40deg) translateY(-10%);
+}
+
+.image-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 999;
+}
+
+.image-popup.show {
+  opacity: 1;
+  pointer-events: auto;
+  color: white;
+  text-align: center;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 10px;
+}
+
+.image-popup img {
+  max-width: 80vw;
+  max-height: 80vh;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.85);
+    opacity: 0.5;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

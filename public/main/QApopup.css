@@ -1,0 +1,116 @@
+.QA-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  padding: 10px;
+  z-index: 9999;
+}
+.QA-popup.showQA {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.QA-popup form {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  min-height: 180px;
+  margin: auto;
+  background: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .QA-popup form {
+    max-width: 90%;
+    padding: 11px;
+    min-height: 140px;
+  }
+
+  .QA-popup label {
+    font-size: 13px;
+  }
+
+  .QA-popup input,
+  .QA-popup select,
+  .QA-popup button {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  .text-inQA {
+    font-size: 10px;
+  }
+
+  .cross-symbol {
+    font-size: 18px;
+  }
+}
+
+.QA-popup label {
+  display: block;
+  margin-top: 11px;
+  font-weight: 300;
+  color: #333;
+  font-size: 11px;
+}
+
+.QA-popup input,
+.QA-popup select,
+.QA-popup button {
+  width: 100%;
+  padding: 6px 10px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 10px;
+}
+.QA-popup button {
+  margin-top: 10px;
+  background: #63c9ff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.QA-popup button:hover {
+  background: #439aa0;
+}
+.flex-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 2px;
+}
+.flex-item {
+  flex: 1;
+}
+.hidden {
+  display: none;
+}
+.cross-symbol {
+  width: 10px;
+  font-weight: 200;
+  font-size: large;
+  cursor: pointer;
+}
+.cross-symbol:hover {
+  background-color: gainsboro;
+  cursor: pointer;
+}
+.text-inQA {
+  font-size: 8px;
+  font-weight: 200;
+}
