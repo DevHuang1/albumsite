@@ -30,7 +30,13 @@ router.post("/register", async (req, res) => {
     });
     console.log("Saving new user...");
     await user.save();
-    await sendVerificationEmail(user.email, verificationToken);
+    try {
+      console.log("Sending verification email to:", user.email);
+      await sendVerificationEmail(user.email, verificationToken);
+      console.log("Email sent successfully!");
+    } catch (err) {
+      console.error("Verification email failed:", err);
+    }
     res.status(200).json({ message: " User registered successfully" });
   } catch (err) {
     console.error("Register error:", err);
