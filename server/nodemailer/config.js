@@ -1,7 +1,10 @@
 require("dotenv").config();
 const nodemailer = require("nodemailer");
+const {
+  verificationTokenEmailTemplate,
+  WELCOME_EMAIL_TEMPLATE,
+} = require("./emailTemplate");
 
-// Create transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -10,13 +13,12 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Send verification email
 async function sendVerificationEmail(toEmail, token) {
   const mailOptions = {
     from: process.env.GMAIL_EMAIL,
     to: toEmail,
     subject: "Verify Your Email Address Now",
-    html: `Verify your email address with this token: ${token}`,
+    html: verificationTokenEmailTemplate.replace("{verificationToken}", token),
   };
 
   try {
@@ -27,5 +29,23 @@ async function sendVerificationEmail(toEmail, token) {
     throw err;
   }
 }
+async function sendWelcomeEmail(email, name) {
+  const mailOptions = {
+    from: process.env.GMAIL_EMAIL,
+    to: email,
+    subject: "Welcome to the community",
+    html: WELCOME_EMAIL_TEMPLATE.replace("{name}", name),
+  };
 
-module.exports = sendVerificationEmail;
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent:", info.response);
+  } catch (err) {
+    console.error("Error sending email:", err);
+    throw err;
+  }
+}
+module.exports = {
+  sendVerificationEmail,
+  sendWelcomeEmail,
+};

@@ -4,7 +4,10 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const generateVerificationToken = require("../utils/generateVerificationToken");
-const sendVerificationEmail = require("../nodemailer/config");
+const {
+  sendVerificationEmail,
+  sendWelcomeEmail,
+} = require("../nodemailer/config");
 
 // Register
 router.post("/register", async (req, res) => {
@@ -76,6 +79,40 @@ router.post("/login", async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.post("/verify-email", async (req, res) => {
+  const { code } = req.body;
+  try {
+    const user = await User.findOne({
+      verificationToken: code,
+      verificationTokenExpiresAt: { $gt: Date.now() },
+    });
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired verification code",
+      });
+    }
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpiresAt = undefined;
+    await user.save();
+    console.log("Attempting to send welcome email...");
+    await sendWelcomeEmail(user.email, user.name);
+    console.log("Welcome email function executed.");
+    res.status(200).json({
+      success: true,
+      message: "Email verified successfully",
+    });
+    console.log("Email Verified Successfully");
+  } catch (error) {
+    console.log("Error verifying email", error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 });
 
