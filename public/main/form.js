@@ -180,10 +180,16 @@ logInForm.addEventListener("submit", (e) => {
   fetch("http://localhost:3000/api/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ email, password }),
   })
     .then(async (res) => {
-      const data = await res.json().catch(() => ({}));
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        data = {};
+      }
       if (!res.ok) throw new Error(data.message || "Login failed");
       return data;
     })
@@ -192,7 +198,6 @@ logInForm.addEventListener("submit", (e) => {
       const loggedInUser = {
         name: data.user.name,
         email: data.user.email,
-        registered: true,
       };
       localStorage.setItem("userData", JSON.stringify(loggedInUser));
       localStorage.setItem("token", data.token);
@@ -273,6 +278,7 @@ function showQuestionnaire() {
     fetch("http://localhost:3000/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify(allData),
     })
       .then((res) => res.json())

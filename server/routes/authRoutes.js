@@ -1,12 +1,16 @@
+require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 const generateVerificationToken = require("../utils/generateVerificationToken");
 const {
   sendVerificationEmail,
   sendWelcomeEmail,
+  sendPasswordResetEmail,
+  sendResetSuccessEmail,
 } = require("../nodemailer/config");
 
 // Register
@@ -22,7 +26,6 @@ router.post("/register", async (req, res) => {
     if (existingUser)
       return res.status(400).json({ message: "Email already registered" });
     const verificationToken = generateVerificationToken();
-    console.log("Verification token:", verificationToken);
     const user = new User({
       name,
       email,
@@ -61,6 +64,13 @@ router.post("/login", async (req, res) => {
     if (!isMatch)
       return res.status(401).json({ message: "Invalid email or password" });
 
+    const isVerified = user.isVerified;
+    if (!isVerified) {
+      return res.status(400).json({
+        success: false,
+        message: "Email not verified",
+      });
+    }
     const token = jwt.sign(
       { id: user._id, email: user.email },
       process.env.JWT_SECRET,
@@ -115,5 +125,84 @@ router.post("/verify-email", async (req, res) => {
     });
   }
 });
+router.post("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.json({
+    success: true,
+    message: "Logged out successfully",
+  });
+});
+router.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    const resetPasswordToken = crypto.randomBytes(32).toString("hex");
+    const resetPasswordTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000; //24hrs
+
+    user.resetPasswordToken = resetPasswordToken;
+    user.resetPasswordTokenExpiresAt = resetPasswordTokenExpiresAt;
+
+    await user.save();
+    console.log("Saving user...");
+
+    await sendPasswordResetEmail(
+      user.email,
+      `${process.env.CLIENT_URL}/reset-password/${resetPasswordToken}`
+    );
+    console.log("Password reset email has been sent!");
+    res.status(200).json({
+      success: true,
+      message: "Password reset email sent successfully!",
+    });
+  } catch (error) {
+    console.log("Error sending password reset email", error);
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+router.post("/reset-password/:token", async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordTokenExpiresAt: { $gt: Date.now() },
+    });
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired reset token",
+      });
+    }
+
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordTokenExpiresAt = undefined;
+    await user.save();
+    await sendResetSuccessEmail(user.email);
+    console.log("Password reset successful email has been sent!");
+    res.status(200).json({
+      success: true,
+      message: "Password reset successfully",
+    });
+  } catch (error) {
+    console.log("Error resetting password", error);
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
 
 module.exports = router;
+
+//All of the above code is written without creating a controller

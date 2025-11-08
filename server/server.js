@@ -6,6 +6,7 @@ const rateLimit = require("express-rate-limit");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const helmet = require("helmet");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,16 +20,22 @@ const limiter = rateLimit({
     message: "Too many requests from this IP, please try again later.",
   },
 });
-app.use(helmet());
-// Apply to all requests
-app.use(limiter);
 
 // Connect to DB
 connectDB();
 
 // Middleware
-app.use(cors());
+app.use(helmet());
 app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+app.use(limiter);
+
+app.use(cookieParser());
 
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes

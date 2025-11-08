@@ -1,27 +1,30 @@
-const userData = JSON.parse(localStorage.getItem("userData"));
+const userData = JSON.parse(localStorage.getItem("userData")) || {};
 const rightMenu = document.querySelector(".right-menu");
 const nameTitle = document.querySelector(".navBtn");
-console.log(userData);
 
-function setupLogoutButton() {
-  const logOutBtn = document.querySelector(".log-out-btn");
-  if (logOutBtn) {
-    logOutBtn.addEventListener("click", () => {
-      localStorage.removeItem("token");
-      localStorage.removeItem("userData");
-      window.location.href = "/main/main.html";
-    });
-  }
-}
-
-if (userData && userData.registered === true) {
+if (userData && userData.name) {
   const name = document.createElement("p");
-  name.textContent = `Hello, ${userData.name.split(" ")[0]}!`;
+  name.textContent = `Hello, ${userData.name.split(" ")[0]}!`; // first name
   name.classList.add("nameTitle");
   rightMenu.prepend(name);
 
   nameTitle.textContent = "Log Out";
   nameTitle.classList.add("log-out-btn");
 
-  setupLogoutButton();
+  const logOutBtn = document.querySelector(".log-out-btn");
+  logOutBtn.addEventListener("click", async () => {
+    try {
+      await fetch("http://localhost:3000/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("userData");
+
+      window.location.href = "/main/main.html";
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  });
 }
