@@ -58,6 +58,8 @@ const loginLimiter = rateLimit({
   },
 });
 app.use("/api/auth/login", loginLimiter);
+// Serve static assets from public
+app.use(express.static(path.join(__dirname, "../public")));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../public/main/main.html"));
