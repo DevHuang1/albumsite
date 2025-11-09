@@ -63,7 +63,7 @@
 .QA-popup label {
   display: block;
   margin-top: 11px;
-  font-weight: 300;
+  font-weight: 350;
   color: #333;
   font-size: 11px;
 }
@@ -119,14 +119,14 @@
   font-weight: 200;
 }
 .verification-header {
-  font-size: 10px;
-  font-weight: 250;
-  margin-top: 5px;
+  font-size: 12px;
+  font-weight: 300;
+  margin-top: 6px;
 }
 .verification-body,
 .countdown-timer {
-  font-size: 9px;
-  font-weight: 250;
+  font-size: 11px;
+  font-weight: 300;
   margin-top: 5px;
 }
 .btn-loader {
@@ -142,6 +142,11 @@
 }
 .btn-loader.visible {
   visibility: visible;
+}
+.popup-msg {
+  margin-top: 6px;
+  font-size: 9px;
+  font-weight: 350;
 }
 @keyframes spin {
   0% {

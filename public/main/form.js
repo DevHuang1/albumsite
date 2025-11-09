@@ -1,4 +1,8 @@
 let userData = {};
+const CONFIG = {
+  API_URL: "https://your-backend.vercel.app",
+  CLIENT_URL: "https://your-frontend.vercel.app",
+};
 
 //Validate first form
 const form = document.querySelector(".form-container");
@@ -258,7 +262,7 @@ function showVerificationPopup(email) {
 
   QAcontainer.innerHTML = `
     <form id="verifyForm">
-      <div id="cross-symbol" class="cross-symbol">x</div>
+      
       <h3 class="verification-header">Email Verification</h3>
       <p class="verification-body">We’ve sent a verification code to <strong>${email}</strong></p>
        <p id="countdown" class="countdown-timer"></p>
@@ -410,5 +414,146 @@ function showQuestionnaire() {
     const savedUser = JSON.parse(localStorage.getItem("userData")) || {};
     const finalData = { ...savedUser, ...questionnaireData };
     localStorage.setItem("userData", JSON.stringify(finalData));
+  });
+}
+document
+  .getElementById("forgot-password-link")
+  .addEventListener("click", (e) => {
+    e.preventDefault();
+
+    const QAcontainer = document.createElement("div");
+    QAcontainer.classList.add("QA-popup", "showQA");
+    QAcontainer.innerHTML = `
+   <form class="forgotForm">
+      <div id="cross-symbol" class="cross-symbol">x</div>
+        <h3 class="verification-header">Forgot Password</h3>
+      <p class="verification-body">Enter your email to receive a reset link!</p>
+      <label>Email</label>
+      <input type="text" id="forgotEmail" placeholder="Your reset email"/>
+      <button type="submit" id="forgotBtn"><span class="btn-text">Send Link</span>
+  <span class="btn-loader"></span></button>
+  <p id="forgotMsg" class="popup-msg"></p>
+    </form>`;
+
+    document.body.appendChild(QAcontainer);
+    const crossSymbol = QAcontainer.querySelector("#cross-symbol");
+    crossSymbol.addEventListener("click", () => {
+      QAcontainer.classList.remove("showQA");
+      setTimeout(() => QAcontainer.remove(), 300);
+    });
+
+    const forgotForm = QAcontainer.querySelector(".forgotForm");
+    const msg = document.getElementById("forgotMsg");
+    const btn = document.getElementById("forgotBtn");
+    const submitButton = forgotForm.querySelector("button");
+    const btnLoader = submitButton.querySelector(".btn-loader");
+    forgotForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("forgotEmail").value.trim();
+
+      submitButton.disabled = true;
+      btnLoader.classList.add("visible");
+      msg.textContent = "Sending reset link...";
+
+      try {
+        const res = await fetch(
+          "http://localhost:3000/api/auth/forgot-password",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          }
+        );
+
+        const data = await res.json();
+        if (data.success) {
+          btnLoader.classList.remove("visible");
+          submitButton.disabled = false;
+
+          msg.textContent = "Reset link sent! Check your inbox.";
+          msg.style.color = "green";
+        } else {
+          msg.textContent = data.message;
+          msg.style.color = "red";
+        }
+      } catch (err) {
+        msg.textContent = "⚠️ Something went wrong.";
+        msg.style.color = "red";
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
+//
+const pathParts = window.location.pathname.split("/");
+if (pathParts[1] === "reset-password" && pathParts[2]) {
+  const token = pathParts[2]; // Extract token from URL
+
+  const QAcontainer = document.createElement("div");
+  QAcontainer.classList.add("QA-popup", "showQA");
+
+  QAcontainer.innerHTML = `
+    <form class="resetForm">
+      <div id="cross-symbol" class="cross-symbol">x</div>
+      <h3 class="verification-header">Reset Password</h3>
+      <p class="verification-body">Enter your new password</p>
+      <input type="password" id="newPassword" placeholder="New password" required />
+      <button type="submit" id="resetBtn">
+        <span class="btn-text">Reset Password</span>
+        <span class="btn-loader"></span>
+      </button>
+      <p id="resetMsg" class="popup-msg"></p>
+    </form>
+  `;
+
+  document.body.appendChild(QAcontainer);
+
+  const crossSymbol = QAcontainer.querySelector("#cross-symbol");
+  crossSymbol.addEventListener("click", () => {
+    QAcontainer.classList.remove("showQA");
+    setTimeout(() => QAcontainer.remove(), 300);
+  });
+
+  const resetForm = QAcontainer.querySelector(".resetForm");
+  const msg = QAcontainer.querySelector("#resetMsg");
+  const submitButton = resetForm.querySelector("button");
+  const btnLoader = submitButton.querySelector(".btn-loader");
+
+  resetForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const password = QAcontainer.querySelector("#newPassword").value.trim();
+
+    submitButton.disabled = true;
+    btnLoader.classList.add("visible");
+    msg.textContent = "Resetting password...";
+
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/auth/reset-password/${token}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password }),
+        }
+      );
+
+      const data = await res.json();
+
+      btnLoader.classList.remove("visible");
+      submitButton.disabled = false;
+
+      if (data.success) {
+        msg.textContent = "Password reset successfully!";
+        msg.style.color = "green";
+      } else {
+        msg.textContent = data.message;
+        msg.style.color = "red";
+      }
+    } catch (err) {
+      btnLoader.classList.remove("visible");
+      submitButton.disabled = false;
+      msg.textContent = "⚠️ Something went wrong.";
+      msg.style.color = "red";
+    }
   });
 }
