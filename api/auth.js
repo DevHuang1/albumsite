@@ -40,10 +40,12 @@ app.get("/second", (req, res) => {
   res.send(secondHTML);
 });
 
-app.get("*", (req, res) => {
+app.get("/*", (req, res) => {
   res.setHeader("Content-Type", "text/html");
   res.send(mainHTML);
 });
+
+app.get("/favicon.ico", (req, res) => res.status(204).end());
 
 // Connect DB
 let dbConnected = false;
