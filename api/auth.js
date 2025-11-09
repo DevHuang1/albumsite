@@ -1,6 +1,7 @@
 const serverless = require("serverless-http");
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
 const cors = require("cors");
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
@@ -20,36 +21,43 @@ app.use(cookieParser());
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 150 }));
 app.use("/api/auth/login", rateLimit({ windowMs: 15 * 60 * 1000, max: 5 }));
 
-// Connect DB once at cold start
-let dbConnected = false;
-const ensureDB = async () => {
-  if (!dbConnected) {
-    await connectDB();
-    dbConnected = true;
-    console.log("DB connected");
-  }
-};
+// API routes
+app.use("/api/auth", authRoutes);
 
-// API routes (wrap with DB connection)
-app.use(
-  "/api/auth",
-  async (req, res, next) => {
+// Read HTML files into memory (serverless-friendly)
+const mainHTML = fs.readFileSync(
+  path.join(__dirname, "../public/main/main.html"),
+  "utf-8"
+);
+const secondHTML = fs.readFileSync(
+  path.join(__dirname, "../public/second/second.html"),
+  "utf-8"
+);
+
+// Fallback HTML routes
+app.get("/second", (req, res) => {
+  res.setHeader("Content-Type", "text/html");
+  res.send(secondHTML);
+});
+
+app.get("*", (req, res) => {
+  res.setHeader("Content-Type", "text/html");
+  res.send(mainHTML);
+});
+
+// Connect DB
+let dbConnected = false;
+app.use(async (req, res, next) => {
+  if (!dbConnected) {
     try {
-      await ensureDB();
-      next();
+      await connectDB();
+      dbConnected = true;
     } catch (err) {
       console.error("DB connection failed:", err);
       return res.status(500).json({ message: "DB connection failed" });
     }
-  },
-  authRoutes
-);
-
-// Serve HTML files
-const mainHTML = path.join(__dirname, "../public/main/main.html");
-const secondHTML = path.join(__dirname, "../public/second/second.html");
-
-app.get("/second", (req, res) => res.sendFile(secondHTML));
-app.get("/:path(*)", (req, res) => res.sendFile(mainHTML));
+  }
+  next();
+});
 
 module.exports = serverless(app);
