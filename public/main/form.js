@@ -1,8 +1,4 @@
 let userData = {};
-const CONFIG = {
-  API_URL: "https://your-backend.vercel.app",
-  CLIENT_URL: "https://your-frontend.vercel.app",
-};
 
 //Validate first form
 const form = document.querySelector(".form-container");
@@ -124,7 +120,13 @@ function addLiveValidation(inputs) {
 
 addLiveValidation(inputs);
 addLiveValidation(loginputs);
-
+function showMessage(message, type = "success") {
+  const msgDiv = document.createElement("div");
+  msgDiv.textContent = message;
+  msgDiv.className = `toast-msg ${type}`;
+  document.body.appendChild(msgDiv);
+  setTimeout(() => msgDiv.remove(), 3000);
+}
 // On submit
 const registerButton = form.querySelector("button");
 const regbtnText = registerButton.querySelector(".btn-text");
@@ -140,20 +142,19 @@ form.addEventListener("submit", (e) => {
   });
 
   if (allValid) {
-    userData = {
+    const safeUserData = {
       name: form.querySelector("#name").value,
       email: form.querySelector("#email").value,
       birthdate: form.querySelector("#birthdate").value,
-      password: form.querySelector("#password").value,
       agreeTerms: form.querySelector("#checkbox").checked,
     };
+    localStorage.setItem("userData", JSON.stringify(safeUserData));
 
-    localStorage.setItem("userData", JSON.stringify(userData));
     regbtnText.textContent = "Registering";
     regbtnLoader.classList.add("visible");
     registerButton.disabled = true;
     showQuestionnaire();
-    alert("Form submitted successfully!");
+    showMessage("Form submitted successfully!");
     regbtnText.textContent = "Register";
     regbtnLoader.classList.remove("visible");
     registerButton.disabled = false;
@@ -178,7 +179,7 @@ logInForm.addEventListener("submit", (e) => {
   });
 
   if (allValid) {
-    alert("Form submitted successfully!");
+    showMessage("Form submitted successfully!");
     form.reset();
 
     loginputs.forEach((input) => {
@@ -193,7 +194,7 @@ logInForm.addEventListener("submit", (e) => {
   logInButton.disabled = true;
   const email = document.getElementById("logIn-email").value.trim();
   const password = document.getElementById("logIn-password").value.trim();
-  fetch("http://localhost:3000/api/auth/login", {
+  fetch("/api/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -213,19 +214,18 @@ logInForm.addEventListener("submit", (e) => {
       btnText.textContent = "Verify";
       btnLoader.classList.remove("visible");
       logInButton.disabled = false;
-      alert("Welcome " + data.user.name);
+      showMessage(`Welcome ${data.user.name}`);
       const loggedInUser = {
         name: data.user.name,
         email: data.user.email,
       };
       localStorage.setItem("userData", JSON.stringify(loggedInUser));
-      localStorage.setItem("token", data.token);
 
       window.location.href = "/second/second.html";
     })
     .catch((err) => {
       console.error("Login fetch error:", err);
-      alert(err.message);
+      showMessage(err.message);
     });
 });
 function startVerificationCountdown(container, duration = 10 * 60) {
@@ -288,7 +288,7 @@ function showVerificationPopup(email) {
     btnText.textContent = "Verifying";
     btnLoader.classList.add("visible");
     submitButton.disabled = true;
-    fetch("http://localhost:3000/api/auth/verify-email", {
+    fetch("/api/auth/verify-email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -300,14 +300,14 @@ function showVerificationPopup(email) {
         btnLoader.classList.remove("visible");
         submitButton.disabled = false;
 
-        alert(data.message);
+        showMessage(data.message);
         if (data.message.toLowerCase().includes("success")) {
           QAcontainer.classList.remove("showQA");
         }
       })
       .catch((err) => {
         console.error("Verification error:", err);
-        alert("Verification failed");
+        showMessage("Verification failed");
       });
   });
 }
@@ -374,15 +374,17 @@ function showQuestionnaire() {
       yearGraduated: QAcontainer.querySelector("#gradYear").value,
     };
 
-    const allData = { ...userData, ...questionnaireData };
-    if (!allData.name || !allData.email || !allData.password) {
-      alert("Please fill the main form first!");
+    const savedUser = JSON.parse(localStorage.getItem("userData")) || {};
+    const allData = { ...savedUser, ...questionnaireData };
+
+    if (!allData.name || !allData.email) {
+      showMessage("Please fill the main form first!");
       return;
     }
     btnText.textContent = "Submitting";
     btnLoader.classList.add("visible");
     submitButton.disabled = true;
-    fetch("http://localhost:3000/api/auth/register", {
+    fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -390,7 +392,7 @@ function showQuestionnaire() {
     })
       .then((res) => res.json())
       .then((data) => {
-        alert(data.message);
+        showMessage(data.message);
         btnText.textContent = "Submit";
         btnLoader.classList.remove("visible");
         submitButton.disabled = false;
@@ -411,9 +413,7 @@ function showQuestionnaire() {
       if (e.key === "Escape") QAcontainer.classList.remove("showQA");
     });
 
-    const savedUser = JSON.parse(localStorage.getItem("userData")) || {};
-    const finalData = { ...savedUser, ...questionnaireData };
-    localStorage.setItem("userData", JSON.stringify(finalData));
+    localStorage.setItem("userData", JSON.stringify(allData));
   });
 }
 document
@@ -456,14 +456,11 @@ document
       msg.textContent = "Sending reset link...";
 
       try {
-        const res = await fetch(
-          "http://localhost:3000/api/auth/forgot-password",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email }),
-          }
-        );
+        const res = await fetch("/api/auth/forgot-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
 
         const data = await res.json();
         if (data.success) {
@@ -528,14 +525,11 @@ if (pathParts[1] === "reset-password" && pathParts[2]) {
     msg.textContent = "Resetting password...";
 
     try {
-      const res = await fetch(
-        `http://localhost:3000/api/auth/reset-password/${token}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ password }),
-        }
-      );
+      const res = await fetch(`/api/auth/reset-password/${token}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
 
       const data = await res.json();
 
