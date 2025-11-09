@@ -21,6 +21,21 @@ app.use(cookieParser());
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 150 }));
 app.use("/api/auth/login", rateLimit({ windowMs: 15 * 60 * 1000, max: 5 }));
 
+// Connect DB first (before routes)
+let dbConnected = false;
+app.use(async (req, res, next) => {
+  if (!dbConnected) {
+    try {
+      await connectDB();
+      dbConnected = true;
+    } catch (err) {
+      console.error("DB connection failed:", err);
+      return res.status(500).json({ message: "DB connection failed" });
+    }
+  }
+  next();
+});
+
 // API routes
 app.use("/api/auth", authRoutes);
 
@@ -40,26 +55,12 @@ app.get("/second", (req, res) => {
   res.send(secondHTML);
 });
 
+app.get("/favicon.ico", (req, res) => res.status(204).end());
+
+// Catch-all route (must be last)
 app.get("/*", (req, res) => {
   res.setHeader("Content-Type", "text/html");
   res.send(mainHTML);
-});
-
-app.get("/favicon.ico", (req, res) => res.status(204).end());
-
-// Connect DB
-let dbConnected = false;
-app.use(async (req, res, next) => {
-  if (!dbConnected) {
-    try {
-      await connectDB();
-      dbConnected = true;
-    } catch (err) {
-      console.error("DB connection failed:", err);
-      return res.status(500).json({ message: "DB connection failed" });
-    }
-  }
-  next();
 });
 
 module.exports = serverless(app);
