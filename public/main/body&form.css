@@ -225,8 +225,13 @@ input:valid {
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
+.btn-text {
+  margin-left: 8px;
+}
 .btn-primary:hover {
   background: linear-gradient(90deg, rgb(183, 243, 255), rgb(145, 224, 255));
   transform: translateY(-2px);

@@ -142,7 +142,8 @@
         </div>
 
         <button class="btn-primary" id="register-btn" type="submit">
-          Register
+          <span class="btn-text">Register</span>
+          <span class="btn-loader"></span>
         </button>
       </form>
 
@@ -191,34 +192,14 @@
 
         <div class="not-registered">
           <p>Don't have an account?<a id="register" href="#"> Register</a></p>
+          <a id="forgot-password" href="#"> forgot password?</a>
         </div>
 
-        <button class="btn-primary" type="submit">Log In</button>
+        <button class="btn-primary" type="submit">
+          <span class="btn-text">Log In</span>
+          <span class="btn-loader"></span>
+        </button>
       </form>
-      <svg class="brush-line" viewBox="0 0 800 400" preserveAspectRatio="none">
-        <defs>
-          <linearGradient
-            id="paint"
-            gradientUnits="userSpaceOnUse"
-            x1="0"
-            y1="0"
-            x2="800"
-            y2="0"
-          >
-            <stop offset="0%" stop-color="green" />
-            <stop offset="60%" stop-color="yellow" />
-            <stop offset="90%" stop-color="cyan" />
-          </linearGradient>
-        </defs>
-        <path
-          d="M0,200 Q150,100 300,200 T600,200 T900,200"
-          stroke="url(#paint)"
-          stroke-width="12"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
     </div>
     <div class="sidebar">
       <div class="close-container">

@@ -9,9 +9,16 @@ const protect = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // attach decoded user info
+    if (!decoded) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired token",
+      });
+    }
+    req.userId = decoded.id; // attach decoded user info
     next();
   } catch (err) {
+    console.log(err);
     res.status(401).json({ message: "Invalid or expired token" });
   }
 };

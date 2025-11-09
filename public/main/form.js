@@ -122,6 +122,9 @@ addLiveValidation(inputs);
 addLiveValidation(loginputs);
 
 // On submit
+const registerButton = form.querySelector("button");
+const regbtnText = registerButton.querySelector(".btn-text");
+const regbtnLoader = registerButton.querySelector(".btn-loader");
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   formSubmitted = true;
@@ -142,9 +145,14 @@ form.addEventListener("submit", (e) => {
     };
 
     localStorage.setItem("userData", JSON.stringify(userData));
+    regbtnText.textContent = "Registering";
+    regbtnLoader.classList.add("visible");
+    registerButton.disabled = true;
     showQuestionnaire();
     alert("Form submitted successfully!");
-
+    regbtnText.textContent = "Register";
+    regbtnLoader.classList.remove("visible");
+    registerButton.disabled = false;
     // Reset border and errors
     inputs.forEach((input) => {
       input.style.borderColor = "#ccc";
@@ -153,7 +161,9 @@ form.addEventListener("submit", (e) => {
     });
   }
 });
-
+const logInButton = logInForm.querySelector("button");
+const btnText = logInButton.querySelector(".btn-text");
+const btnLoader = logInButton.querySelector(".btn-loader");
 logInForm.addEventListener("submit", (e) => {
   e.preventDefault();
   formSubmitted = true;
@@ -174,7 +184,9 @@ logInForm.addEventListener("submit", (e) => {
     });
   }
 
-  const name = document.getElementById("logIn-name").value.trim();
+  btnText.textContent = "Verifying";
+  btnLoader.classList.add("visible");
+  logInButton.disabled = true;
   const email = document.getElementById("logIn-email").value.trim();
   const password = document.getElementById("logIn-password").value.trim();
   fetch("http://localhost:3000/api/auth/login", {
@@ -194,6 +206,9 @@ logInForm.addEventListener("submit", (e) => {
       return data;
     })
     .then((data) => {
+      btnText.textContent = "Verify";
+      btnLoader.classList.remove("visible");
+      logInButton.disabled = false;
       alert("Welcome " + data.user.name);
       const loggedInUser = {
         name: data.user.name,
@@ -209,7 +224,89 @@ logInForm.addEventListener("submit", (e) => {
       alert(err.message);
     });
 });
+function startVerificationCountdown(container, duration = 10 * 60) {
+  const countdownEl = container.querySelector("#countdown");
+  let timeLeft = duration;
 
+  function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs
+      .toString()
+      .padStart(2, "0")}`;
+  }
+
+  countdownEl.textContent = `Code expires in: ${formatTime(timeLeft)}`;
+
+  const interval = setInterval(() => {
+    timeLeft--;
+    countdownEl.textContent = `Code expires in: ${formatTime(timeLeft)}`;
+
+    if (timeLeft <= 0) {
+      clearInterval(interval);
+      countdownEl.textContent = "Verification code expired";
+      container.querySelector("#verificationCode").disabled = true;
+      container.querySelector("button").disabled = true;
+    }
+  }, 1000);
+}
+
+function showVerificationPopup(email) {
+  const QAcontainer = document.createElement("div");
+
+  QAcontainer.classList.add("QA-popup", "showQA");
+
+  QAcontainer.innerHTML = `
+    <form id="verifyForm">
+      <div id="cross-symbol" class="cross-symbol">x</div>
+      <h3 class="verification-header">Email Verification</h3>
+      <p class="verification-body">We’ve sent a verification code to <strong>${email}</strong></p>
+       <p id="countdown" class="countdown-timer"></p>
+      <input type="text" id="verificationCode" placeholder="Enter 6-digit code" maxlength="6" required />
+      <button type="submit"> <span class="btn-text">Verify</span>
+  <span class="btn-loader"></span></button>
+    </form>
+  `;
+
+  document.body.appendChild(QAcontainer);
+
+  const verifyForm = QAcontainer.querySelector("#verifyForm");
+  const submitButton = verifyForm.querySelector("button");
+  const btnText = submitButton.querySelector(".btn-text");
+  const btnLoader = submitButton.querySelector(".btn-loader");
+  startVerificationCountdown(QAcontainer);
+  verifyForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const code = QAcontainer.querySelector("#verificationCode").value.trim();
+    if (!code) {
+      alert("Please enter the verification code!");
+    }
+    btnText.textContent = "Verifying";
+    btnLoader.classList.add("visible");
+    submitButton.disabled = true;
+    fetch("http://localhost:3000/api/auth/verify-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ email, code }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        btnText.textContent = "Verify";
+        btnLoader.classList.remove("visible");
+        submitButton.disabled = false;
+
+        alert(data.message);
+        if (data.message.toLowerCase().includes("success")) {
+          QAcontainer.classList.remove("showQA");
+        }
+      })
+      .catch((err) => {
+        console.error("Verification error:", err);
+        alert("Verification failed");
+      });
+  });
+}
 function showQuestionnaire() {
   const QAcontainer = document.createElement("div");
   QAcontainer.classList.add("QA-popup", "showQA");
@@ -250,7 +347,8 @@ function showQuestionnaire() {
 
       <label>Year Graduated</label>
       <input type="number" id="gradYear" placeholder="e.g., 2022(if not graduated,remain at blank)" min="1900" max="2099" />
-      <button type="submit" id="submitBtn">Submit</button>
+      <button type="submit" id="submitBtn"><span class="btn-text">Submit</span>
+  <span class="btn-loader"></span></button>
     </form>`;
 
   document.body.appendChild(QAcontainer);
@@ -259,7 +357,9 @@ function showQuestionnaire() {
     QAcontainer.classList.remove("showQA");
   });
   const studentForm = QAcontainer.querySelector("#studentForm");
-
+  const submitButton = studentForm.querySelector("button");
+  const btnText = submitButton.querySelector(".btn-text");
+  const btnLoader = submitButton.querySelector(".btn-loader");
   studentForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -275,6 +375,9 @@ function showQuestionnaire() {
       alert("Please fill the main form first!");
       return;
     }
+    btnText.textContent = "Submitting";
+    btnLoader.classList.add("visible");
+    submitButton.disabled = true;
     fetch("http://localhost:3000/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -284,7 +387,15 @@ function showQuestionnaire() {
       .then((res) => res.json())
       .then((data) => {
         alert(data.message);
+        btnText.textContent = "Submit";
+        btnLoader.classList.remove("visible");
+        submitButton.disabled = false;
         if (data.message.includes("success")) {
+          const verificationSent = document.createElement("p");
+          verificationSent.textContent = `The verification code has been sent to your email!`;
+          QAcontainer.appendChild(verificationSent);
+          QAcontainer.classList.remove("showQA");
+          showVerificationPopup(allData.email);
         }
       })
       .catch((err) => console.error("Register fetch error:", err));
