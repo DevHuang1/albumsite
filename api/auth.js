@@ -11,60 +11,17 @@ const authRoutes = require("../server/routes/authRoutes");
 
 const app = express();
 
-// --------------------
 // Middleware
-// --------------------
 app.use(helmet());
 app.use(express.json());
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(cookieParser());
 
-// --------------------
-// Rate limiting
-// --------------------
+// Rate limits
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 150 }));
 app.use("/api/auth/login", rateLimit({ windowMs: 15 * 60 * 1000, max: 5 }));
 
-// --------------------
-// API routes
-// --------------------
-app.use("/api/auth", authRoutes);
-
-// --------------------
-// Read HTML files into memory
-// --------------------
-const mainHTML = fs.readFileSync(
-  path.join(__dirname, "../public/main/main.html"),
-  "utf-8"
-);
-const secondHTML = fs.readFileSync(
-  path.join(__dirname, "../public/second/second.html"),
-  "utf-8"
-);
-
-// --------------------
-// Favicon routes
-// --------------------
-app.get("/favicon.ico", (req, res) => res.status(204).end());
-app.get("/favicon.png", (req, res) => res.status(204).end());
-
-// --------------------
-// HTML routes
-// --------------------
-app.get("/second", (req, res) => {
-  res.setHeader("Content-Type", "text/html");
-  res.send(secondHTML);
-});
-
-// Catch-all for all other routes (serverless-friendly)
-app.get("*", (req, res) => {
-  res.setHeader("Content-Type", "text/html");
-  res.send(mainHTML);
-});
-
-// --------------------
-// Connect to DB once per cold start
-// --------------------
+// Connect to DB
 let dbConnected = false;
 app.use(async (req, res, next) => {
   if (!dbConnected) {
@@ -79,7 +36,31 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// --------------------
-// Export serverless handler
-// --------------------
+// API routes
+app.use("/api/auth", authRoutes);
+
+// Read HTML files into memory
+const mainHTML = fs.readFileSync(
+  path.join(__dirname, "../public/main/main.html"),
+  "utf-8"
+);
+const secondHTML = fs.readFileSync(
+  path.join(__dirname, "../public/second/second.html"),
+  "utf-8"
+);
+
+// HTML routes
+app.get("/second", (req, res) => {
+  res.setHeader("Content-Type", "text/html");
+  res.send(secondHTML);
+});
+
+app.get("/", (req, res) => {
+  res.setHeader("Content-Type", "text/html");
+  res.send(mainHTML);
+});
+
+// Optional: favicon
+app.get("/favicon.ico", (req, res) => res.status(204).end());
+
 module.exports = serverless(app);
