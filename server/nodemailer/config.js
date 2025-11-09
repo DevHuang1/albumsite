@@ -50,7 +50,7 @@ async function sendPasswordResetEmail(email, resetURL) {
     from: process.env.GMAIL_EMAIL,
     to: email,
     subject: "Reset Your Password",
-    html: `Click <a href="${resetURL}">here</a> to reset your password`,
+    html: `Click <a href="${resetURL}" target="_blank">${resetURL}</a> to reset your password`,
   };
 
   try {
