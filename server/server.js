@@ -60,17 +60,12 @@ const loginLimiter = rateLimit({
 app.use("/api/auth/login", loginLimiter);
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/main/main.html"));
+  res.sendFile(path.join(__dirname, "../public/main/main.html"));
 });
-
 app.get("/second", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/second/second.html"));
+  res.sendFile(path.join(__dirname, "../public/second/second.html"));
 });
-
 // Routes
 app.use("/api/auth", authRoutes);
 
-// app.listen(PORT, () =>
-//   console.log(` Server running on http://localhost:${PORT}`)
-// );
 module.exports = app;
