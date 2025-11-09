@@ -29,7 +29,7 @@ app.use(helmet());
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_URL,
     credentials: true,
   })
 );
@@ -59,19 +59,18 @@ const loginLimiter = rateLimit({
 });
 app.use("/api/auth/login", loginLimiter);
 
-app.use(express.static(path.join(__dirname, "../public")));
-
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/main/main.html"));
+  res.sendFile(path.join(__dirname, "public/main/main.html"));
 });
 
 app.get("/second", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/second/second.html"));
+  res.sendFile(path.join(__dirname, "public/second/second.html"));
 });
 
 // Routes
 app.use("/api/auth", authRoutes);
 
-app.listen(PORT, () =>
-  console.log(` Server running on http://localhost:${PORT}`)
-);
+// app.listen(PORT, () =>
+//   console.log(` Server running on http://localhost:${PORT}`)
+// );
+module.exports = app;

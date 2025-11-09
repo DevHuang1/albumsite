@@ -4,7 +4,7 @@ const verificationTokenEmailTemplate = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML
     <link
       rel="preload"
       as="image"
-      href="https://react-email-demo-rkbbz67tn-resend.vercel.app/static/aws-logo.png" />
+      href="https://school-community-rose.vercel.app/main/logo.png" />
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
     <meta name="x-apple-disable-message-reformatting" />
     <!--$-->
@@ -24,7 +24,7 @@ const verificationTokenEmailTemplate = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML
             <div
               style="display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0"
               data-skip-in-text="true">
-              AWS Email Verification
+              Email Verification
               <div>
                  ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
               </div>
@@ -63,9 +63,9 @@ const verificationTokenEmailTemplate = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML
                                 <tr>
                                   <td>
                                     <img
-                                      alt="AWS&#x27;s Logo"
+                                      alt="Logo"
                                       height="45"
-                                      src="https://react-email-demo-rkbbz67tn-resend.vercel.app/static/aws-logo.png"
+                                      src="https://school-community-rose.vercel.app/main/logo.png"
                                       style="display:block;outline:none;border:none;text-decoration:none"
                                       width="75" />
                                   </td>
@@ -89,7 +89,7 @@ const verificationTokenEmailTemplate = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML
                                     </h1>
                                     <p
                                       style="font-size:14px;line-height:24px;color:rgb(51,51,51);margin-top:24px;margin-bottom:14px;margin-right:0;margin-left:0">
-                                      Thanks for starting the new AWS account
+                                      Thanks for starting new account
                                       creation process. We want to make sure
                                       it&#x27;s really you. Please enter the
                                       following verification code when prompted.
@@ -143,10 +143,7 @@ const verificationTokenEmailTemplate = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML
                                   <td>
                                     <p
                                       style="font-size:14px;line-height:24px;color:rgb(51,51,51);margin:0;margin-top:0;margin-bottom:0;margin-left:0;margin-right:0">
-                                      Amazon Web Services will never email you
-                                      and ask you to disclose or verify your
-                                      password, credit card, or banking account
-                                      number.
+                                     You can enter your verification token now!
                                     </p>
                                   </td>
                                 </tr>
@@ -156,25 +153,7 @@ const verificationTokenEmailTemplate = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML
                         </tr>
                       </tbody>
                     </table>
-                    <p
-                      style="font-size:12px;line-height:24px;color:rgb(51,51,51);margin-bottom:24px;margin-top:24px;margin-right:0;margin-left:0;padding-right:20px;padding-left:20px;padding-bottom:0;padding-top:0">
-                      This message was produced and distributed by Amazon Web
-                      Services, Inc., 410 Terry Ave. North, Seattle, WA 98109.
-                      © 2022, Amazon Web Services, Inc.. All rights reserved.
-                      AWS is a registered trademark of<!-- -->
-                      <a
-                        href="https://amazon.com"
-                        style="color:rgb(39,84,197);text-decoration-line:underline;font-size:14px"
-                        target="_blank"
-                        >Amazon.com</a
-                      >, Inc. View our<!-- -->
-                      <a
-                        href="https://amazon.com"
-                        style="color:rgb(39,84,197);text-decoration-line:underline;font-size:14px"
-                        target="_blank"
-                        >privacy policy</a
-                      >.
-                    </p>
+               
                   </td>
                 </tr>
               </tbody>
@@ -193,7 +172,7 @@ const WELCOME_EMAIL_TEMPLATE = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Tra
     <link
       rel="preload"
       as="image"
-      href="https://react-email-demo-rkbbz67tn-resend.vercel.app/static/koala-logo.png" />
+      href="https://school-community-rose.vercel.app/main/logo.png" />
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
     <meta name="x-apple-disable-message-reformatting" />
     <!--$-->
@@ -213,8 +192,7 @@ const WELCOME_EMAIL_TEMPLATE = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Tra
             <div
               style="display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0"
               data-skip-in-text="true">
-              The sales intelligence platform that helps you uncover qualified
-              leads.
+              Welcome to Hla Thaung community!
               <div>
                  ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿
               </div>
@@ -231,9 +209,9 @@ const WELCOME_EMAIL_TEMPLATE = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Tra
                 <tr style="width:100%">
                   <td>
                     <img
-                      alt="Koala"
+                      alt="HT"
                       height="50"
-                      src="https://react-email-demo-rkbbz67tn-resend.vercel.app/static/koala-logo.png"
+                      src="https://school-community-rose.vercel.app/main/logo.png"
                       style="display:block;outline:none;border:none;text-decoration:none;margin-right:auto;margin-left:auto"
                       width="170" />
                     <p
@@ -242,8 +220,7 @@ const WELCOME_EMAIL_TEMPLATE = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Tra
                     </p>
                     <p
                       style="font-size:16px;line-height:26px;margin-top:16px;margin-bottom:16px">
-                      Welcome to Koala, the sales intelligence platform that
-                      helps you uncover qualified leads and close deals faster.
+                      Welcome to Hla Thaung,
                     </p>
                     <table
                       align="center"
@@ -257,14 +234,11 @@ const WELCOME_EMAIL_TEMPLATE = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Tra
                         <tr>
                           <td>
                             <a
-                              href="https://getkoala.com"
+                              href="https://school-community-rose.vercel.app"
                               style="line-height:100%;text-decoration:none;display:block;max-width:100%;mso-padding-alt:0px;background-color:rgb(95,81,232);border-radius:3px;color:rgb(255,255,255);font-size:16px;text-decoration-line:none;text-align:center;padding:12px;padding-top:12px;padding-right:12px;padding-bottom:12px;padding-left:12px"
                               target="_blank"
                               ><span
                                 ><!--[if mso]><i style="mso-font-width:300%;mso-text-raise:18" hidden>&#8202;&#8202;</i><![endif]--></span
-                              ><span
-                                style="max-width:100%;display:inline-block;line-height:120%;mso-padding-alt:0px;mso-text-raise:9px"
-                                >Get started</span
                               ><span
                                 ><!--[if mso]><i style="mso-font-width:300%" hidden>&#8202;&#8202;&#8203;</i><![endif]--></span
                               ></a
@@ -275,13 +249,13 @@ const WELCOME_EMAIL_TEMPLATE = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Tra
                     </table>
                     <p
                       style="font-size:16px;line-height:26px;margin-top:16px;margin-bottom:16px">
-                      Best,<br />The Koala team
+                      Wish you the Best,<br />Hla Thaung Dev. Mr. huang.
                     </p>
                     <hr
                       style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:rgb(204,204,204);margin-bottom:20px;margin-top:20px" />
                     <p
                       style="font-size:12px;line-height:24px;color:rgb(136,152,170);margin-top:16px;margin-bottom:16px">
-                      470 Noor Ave STE B #1148, South San Francisco, CA 94080
+                      Mingalardon
                     </p>
                   </td>
                 </tr>

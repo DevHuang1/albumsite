@@ -4,7 +4,10 @@ const protect = (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({ message: "No token, authorization denied" });
+    return res.status(401).json({
+      success: false,
+      message: "No token, authorization denied",
+    });
   }
 
   try {
@@ -19,7 +22,10 @@ const protect = (req, res, next) => {
     next();
   } catch (err) {
     console.log(err);
-    res.status(401).json({ message: "Invalid or expired token" });
+    res.status(401).json({
+      success: false,
+      message: "Invalid or expired token",
+    });
   }
 };
 
