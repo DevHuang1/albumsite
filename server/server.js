@@ -9,17 +9,6 @@ const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Limit requests
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 150, // limit each IP to 100 requests per windowMs
-  message: {
-    success: false,
-    message: "Too many requests from this IP, please try again later.",
-  },
-});
 
 // Connect to DB
 connectDB();
@@ -27,41 +16,19 @@ connectDB();
 // Middleware
 app.use(helmet());
 app.use(express.json());
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true,
-  })
-);
-app.use(limiter);
-
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(cookieParser());
 
-const generalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 150, // 100 requests per IP
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: {
-    success: false,
-    message: "Too many requests, please try again later.",
-  },
-});
+// Rate limits
+const generalLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 150 });
 app.use(generalLimiter);
-
-const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // max 5 login attempts per IP
-  message: {
-    success: false,
-    message: "Too many login attempts, please try again after 15 minutes.",
-  },
-});
+const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 5 });
 app.use("/api/auth/login", loginLimiter);
-// Serve static assets from public
+
+// Serve static files
 app.use(express.static(path.join(__dirname, "../public")));
 
-// Routes
+// API routes
 app.use("/api/auth", authRoutes);
 
 module.exports = app;
