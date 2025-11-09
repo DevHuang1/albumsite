@@ -10,9 +10,6 @@ const authRoutes = require("../server/routes/authRoutes");
 
 const app = express();
 
-// Connect to DB
-connectDB();
-
 // Middleware
 app.use(helmet());
 app.use(express.json());
@@ -20,26 +17,32 @@ app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(cookieParser());
 
 // Rate limits
-const generalLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 150 });
-app.use(generalLimiter);
-const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 5 });
-app.use("/api/auth/login", loginLimiter);
-
-// Serve static files
-const publicDir = path.join(__dirname, "../public");
-app.use(express.static(publicDir));
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 150 }));
+app.use("/api/auth/login", rateLimit({ windowMs: 15 * 60 * 1000, max: 5 }));
 
 // API routes
 app.use("/api/auth", authRoutes);
 
-// HTML routes
-app.get("/second", (req, res) => {
-  res.sendFile(path.join(publicDir, "second/second.html"));
-});
+// Fallback HTML routes (remove express.static for serverless)
+const mainHTML = path.join(__dirname, "../public/main/main.html");
+const secondHTML = path.join(__dirname, "../public/second/second.html");
 
-// Fallback for root and everything else
-app.get("*", (req, res) => {
-  res.sendFile(path.join(publicDir, "main/main.html"));
+app.get("/second", (req, res) => res.sendFile(secondHTML));
+app.get("*", (req, res) => res.sendFile(mainHTML));
+
+// Connect DB lazily
+let dbConnected = false;
+app.use(async (req, res, next) => {
+  if (!dbConnected) {
+    try {
+      await connectDB();
+      dbConnected = true;
+    } catch (err) {
+      console.error("DB connection failed:", err);
+      return res.status(500).json({ message: "DB connection failed" });
+    }
+  }
+  next();
 });
 
 module.exports = serverless(app);
