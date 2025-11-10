@@ -1,7 +1,7 @@
 const serverless = require("serverless-http");
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
+const fs = require("fs").promises; // async version
 const cors = require("cors");
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
@@ -19,7 +19,7 @@ app.use(cookieParser());
 // Trust proxy (needed for serverless / Cloudflare / API Gateway)
 app.set("trust proxy", 1);
 
-// ---------- MongoDB Connection (lazy for serverless) ----------
+// ---------- MongoDB Connection ----------
 let dbConnected = false;
 const lazyConnectDB = async () => {
   if (!dbConnected) {
@@ -29,11 +29,13 @@ const lazyConnectDB = async () => {
   }
 };
 app.use(async (req, res, next) => {
-  try {
-    await lazyConnectDB();
-  } catch (err) {
-    console.error("❌ DB connection failed:", err);
-    return res.status(500).json({ message: "Database connection failed" });
+  if (!dbConnected) {
+    try {
+      await lazyConnectDB();
+    } catch (err) {
+      console.error("❌ DB connection failed:", err);
+      return res.status(500).json({ message: "Database connection failed" });
+    }
   }
   next();
 });
@@ -46,25 +48,40 @@ const publicDir = path.join(__dirname, "../public");
 app.use(express.static(publicDir));
 
 // ---------- HTML Routes ----------
-const mainHTML = fs.readFileSync(
-  path.join(publicDir, "main/main.html"),
-  "utf-8"
-);
-const secondHTML = fs.readFileSync(
-  path.join(publicDir, "second/second.html"),
-  "utf-8"
-);
+app.get("/", async (req, res) => {
+  try {
+    const mainHTML = await fs.readFile(
+      path.join(publicDir, "main/main.html"),
+      "utf-8"
+    );
+    res.type("html").send(mainHTML);
+  } catch (err) {
+    console.error("Error loading main.html:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
-app.get("/", (req, res) => res.type("html").send(mainHTML));
-app.get("/second", (req, res) => res.type("html").send(secondHTML));
+app.get("/second", async (req, res) => {
+  try {
+    const secondHTML = await fs.readFile(
+      path.join(publicDir, "second/second.html"),
+      "utf-8"
+    );
+    res.type("html").send(secondHTML);
+  } catch (err) {
+    console.error("Error loading second.html:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 // ---------- Favicon ----------
 app.get("/favicon.ico", (req, res) => res.status(204).end());
-app.get("/favicon.png", (req, res) => {
-  const faviconPath = path.join(publicDir, "favicon.png");
-  if (fs.existsSync(faviconPath)) {
+app.get("/favicon.png", async (req, res) => {
+  try {
+    const faviconPath = path.join(publicDir, "favicon.png");
+    await fs.access(faviconPath);
     res.sendFile(faviconPath);
-  } else {
+  } catch {
     res.status(204).end();
   }
 });
