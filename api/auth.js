@@ -18,9 +18,34 @@ app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(cookieParser());
 
 app.set("trust proxy", 1);
-// Rate limits
-app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 150 }));
-app.use("/api/auth/login", rateLimit({ windowMs: 15 * 60 * 1000, max: 5 }));
+
+const getClientIp = (req) => {
+  return (
+    req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || // use first forwarded IP
+    req.headers["forwarded"] ||
+    req.ip ||
+    "unknown"
+  );
+};
+
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 150,
+    keyGenerator: getClientIp, // use custom IP reader
+    standardHeaders: true, // return rate limit info in RateLimit-* headers
+    legacyHeaders: false, // disable X-RateLimit-* headers
+  })
+);
+
+app.use(
+  "/api/auth/login",
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    keyGenerator: getClientIp,
+  })
+);
 
 // Connect to DB
 let dbConnected = false;
