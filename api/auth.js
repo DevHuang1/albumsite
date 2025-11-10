@@ -76,8 +76,14 @@ app.get("/", (req, res) => res.type("html").send(mainHTML));
 app.get("/second", (req, res) => res.type("html").send(secondHTML));
 
 // ---------- Favicon ----------
-app.get("/favicon.ico", (req, res) => res.status(204).end());
-app.get("/favicon.png", (req, res) => res.status(204).end());
+app.get("/favicon.ico", (req, res) => {
+  const path = require("path");
+  res.sendFile(path.join(__dirname, "../public/favicon.ico"), (err) => {
+    if (err) res.status(204).end();
+  });
+});
+
+// Remove favicon.png route entirely
 
 // ---------- Export serverless ----------
 module.exports = serverless(app);
