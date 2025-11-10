@@ -22,13 +22,11 @@ app.use(cookieParser());
 app.set("trust proxy", 1);
 
 // ---------- Rate Limiting ----------
-const getClientIp = (req) => ipKeyGenerator(req) || "unknown"; // IPv6-safe
-
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 150,
-    keyGenerator: getClientIp,
+    keyGenerator: (req) => ipKeyGenerator(req) || "unknown",
     standardHeaders: true,
     legacyHeaders: false,
   })
@@ -39,7 +37,7 @@ app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 5,
-    keyGenerator: getClientIp,
+    keyGenerator: (req) => ipKeyGenerator(req) || "unknown",
     standardHeaders: true,
     legacyHeaders: false,
   })
@@ -74,23 +72,16 @@ const secondHTML = fs.readFileSync(
   "utf-8"
 );
 
-app.get("/", (req, res) => {
-  res.type("html").send(mainHTML);
-});
-
-app.get("/second", (req, res) => {
-  res.type("html").send(secondHTML);
-});
+app.get("/", (req, res) => res.type("html").send(mainHTML));
+app.get("/second", (req, res) => res.type("html").send(secondHTML));
 
 // ---------- Favicon ----------
 app.get("/favicon.ico", (req, res) => res.status(204).end());
 app.get("/favicon.png", (req, res) => {
   const faviconPath = path.join(__dirname, "../public/favicon.png");
-  if (fs.existsSync(faviconPath)) {
-    res.sendFile(faviconPath);
-  } else {
-    res.status(204).end();
-  }
+  res.sendFile(faviconPath, (err) => {
+    if (err) res.status(204).end();
+  });
 });
 
 // ---------- Export serverless ----------
