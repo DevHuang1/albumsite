@@ -6,7 +6,6 @@ const cors = require("cors");
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const rateLimit = require("express-rate-limit");
-const { ipKeyGenerator } = require("express-rate-limit/lib/utils");
 const connectDB = require("../server/config/db");
 const authRoutes = require("../server/routes/authRoutes");
 
@@ -18,22 +17,17 @@ app.use(express.json());
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(cookieParser());
 
-app.set("trust proxy", 1); // needed for rate-limiter behind proxies
+// Trust proxy for rate-limit to work behind serverless/proxies
+app.set("trust proxy", 1);
 
-// IPv6-safe custom IP reader
-const getClientIp = (req) => {
-  const ip =
-    req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
-    req.headers["forwarded"] ||
-    req.ip ||
-    "unknown";
-  return ipKeyGenerator(ip); // normalize IPv6 addresses
-};
+// IPv6-safe IP generator
+const getClientIp = (req) =>
+  req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.ip || "unknown";
 
-// Rate limits
+// Global rate limit
 app.use(
   rateLimit({
-    windowMs: 15 * 60 * 1000,
+    windowMs: 15 * 60 * 1000, // 15 minutes
     max: 150,
     keyGenerator: getClientIp,
     standardHeaders: true,
@@ -41,16 +35,19 @@ app.use(
   })
 );
 
+// Login-specific rate limit
 app.use(
   "/api/auth/login",
   rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 5,
     keyGenerator: getClientIp,
+    standardHeaders: true,
+    legacyHeaders: false,
   })
 );
 
-// Lazy DB connect
+// Lazy MongoDB connection (first request only)
 let dbConnected = false;
 app.use(async (req, res, next) => {
   if (!dbConnected) {
@@ -69,9 +66,6 @@ app.use(async (req, res, next) => {
 // API routes
 app.use("/api/auth", authRoutes);
 
-// Serve static assets (like favicon) from public folder
-app.use(express.static(path.join(__dirname, "../public")));
-
 // Read HTML files into memory
 const mainHTML = fs.readFileSync(
   path.join(__dirname, "../public/main/main.html"),
@@ -83,10 +77,22 @@ const secondHTML = fs.readFileSync(
 );
 
 // HTML routes
-app.get("/", (req, res) => res.send(mainHTML));
-app.get("/second", (req, res) => res.send(secondHTML));
+app.get("/", (req, res) => {
+  res.setHeader("Content-Type", "text/html");
+  res.send(mainHTML);
+});
 
-// Handle favicon requests gracefully
+app.get("/second", (req, res) => {
+  res.setHeader("Content-Type", "text/html");
+  res.send(secondHTML);
+});
+
+// Favicon routes
 app.get("/favicon.ico", (req, res) => res.status(204).end());
+app.get("/favicon.png", (req, res) =>
+  res.sendFile(path.join(__dirname, "../public/favicon.png"), (err) => {
+    if (err) res.status(204).end();
+  })
+);
 
 module.exports = serverless(app);
