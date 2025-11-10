@@ -221,7 +221,7 @@ logInForm.addEventListener("submit", (e) => {
       };
       localStorage.setItem("userData", JSON.stringify(loggedInUser));
 
-      window.location.href = "/second/second.html";
+      window.location.href = "/second/index.html";
     })
     .catch((err) => {
       console.error("Login fetch error:", err);

@@ -22,7 +22,7 @@ if (userData && userData.name) {
       localStorage.removeItem("token");
       localStorage.removeItem("userData");
 
-      window.location.href = "/main/main.html";
+      window.location.href = "/index.html";
     } catch (err) {
       console.error("Logout failed:", err);
     }

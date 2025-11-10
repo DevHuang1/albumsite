@@ -8,32 +8,20 @@ const authRoutes = require("../server/routes/authRoutes");
 
 const app = express();
 
-// ---------- Middleware ----------
+// Middleware
 app.use(helmet());
 app.use(express.json());
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true,
-  })
-);
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(cookieParser());
 app.set("trust proxy", 1);
 
-// ---------- MongoDB Lazy Connection (serverless safe) ----------
-let dbConnected = false;
-
-async function ensureDB() {
-  if (!dbConnected) {
-    await connectDB();
-    dbConnected = true;
-    console.log("✅ MongoDB connected");
-  }
+// Serverless-safe global DB connection
+if (!global._mongoClientPromise) {
+  global._mongoClientPromise = connectDB();
 }
-
 app.use(async (req, res, next) => {
   try {
-    await ensureDB();
+    await global._mongoClientPromise;
     next();
   } catch (err) {
     console.error("❌ Database connection error:", err);
@@ -41,8 +29,8 @@ app.use(async (req, res, next) => {
   }
 });
 
-// ---------- API Routes ----------
+// Routes
 app.use("/api/auth", authRoutes);
 
-// ---------- Export ----------
+// Export
 module.exports = serverless(app);
