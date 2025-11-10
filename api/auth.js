@@ -5,8 +5,6 @@ const fs = require("fs");
 const cors = require("cors");
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
-const rateLimit = require("express-rate-limit");
-const { ipKeyGenerator } = require("express-rate-limit");
 const connectDB = require("../server/config/db");
 const authRoutes = require("../server/routes/authRoutes");
 
@@ -21,28 +19,6 @@ app.use(cookieParser());
 // Trust proxy (needed for serverless / Cloudflare / API Gateway)
 app.set("trust proxy", 1);
 
-// // ---------- Rate Limiting ----------
-// app.use(
-//   rateLimit({
-//     windowMs: 15 * 60 * 1000,
-//     max: 150,
-//     keyGenerator: (req) => ipKeyGenerator(req) || "unknown",
-//     standardHeaders: true,
-//     legacyHeaders: false,
-//   })
-// );
-
-// app.use(
-//   "/api/auth/login",
-//   rateLimit({
-//     windowMs: 15 * 60 * 1000,
-//     max: 5,
-//     keyGenerator: (req) => ipKeyGenerator(req) || "unknown",
-//     standardHeaders: true,
-//     legacyHeaders: false,
-//   })
-// );
-
 // ---------- MongoDB Connection ----------
 let dbConnected = false;
 app.use(async (req, res, next) => {
@@ -50,9 +26,9 @@ app.use(async (req, res, next) => {
     try {
       await connectDB();
       dbConnected = true;
-      console.log("MongoDB connected (lazy)");
+      console.log("✅ MongoDB connected (lazy)");
     } catch (err) {
-      console.error("DB connection failed:", err);
+      console.error("❌ DB connection failed:", err);
       return res.status(500).json({ message: "Database connection failed" });
     }
   }
@@ -61,8 +37,11 @@ app.use(async (req, res, next) => {
 
 // ---------- API Routes ----------
 app.use("/api/auth", authRoutes);
+
+// ---------- Serve Static Files ----------
 app.use(express.static(path.join(__dirname, "../public")));
-// ---------- Static HTML ----------
+
+// ---------- HTML Routes ----------
 const mainHTML = fs.readFileSync(
   path.join(__dirname, "../public/main/main.html"),
   "utf-8"
@@ -74,14 +53,6 @@ const secondHTML = fs.readFileSync(
 
 app.get("/", (req, res) => res.type("html").send(mainHTML));
 app.get("/second", (req, res) => res.type("html").send(secondHTML));
-
-// ---------- Favicon ----------
-app.get("/favicon.ico", (req, res) => {
-  const path = require("path");
-  res.sendFile(path.join(__dirname, "../public/favicon.ico"), (err) => {
-    if (err) res.status(204).end();
-  });
-});
 
 // ---------- Export serverless ----------
 module.exports = serverless(app);
