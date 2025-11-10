@@ -6,6 +6,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const rateLimit = require("express-rate-limit");
+const { ipKeyGenerator } = require("express-rate-limit");
 const connectDB = require("../server/config/db");
 const authRoutes = require("../server/routes/authRoutes");
 
@@ -17,14 +18,17 @@ app.use(express.json());
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(cookieParser());
 
-// Trust proxy for serverless
+// Trust proxy (needed for serverless / Cloudflare / API Gateway)
 app.set("trust proxy", 1);
 
-// ---------- Rate Limiting (IPv6-safe by default) ----------
+// ---------- Rate Limiting ----------
+const getClientIp = (req) => ipKeyGenerator(req) || "unknown"; // IPv6-safe
+
 app.use(
   rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 150, // max requests per IP
+    windowMs: 15 * 60 * 1000,
+    max: 150,
+    keyGenerator: getClientIp,
     standardHeaders: true,
     legacyHeaders: false,
   })
@@ -35,6 +39,7 @@ app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 5,
+    keyGenerator: getClientIp,
     standardHeaders: true,
     legacyHeaders: false,
   })
@@ -70,21 +75,23 @@ const secondHTML = fs.readFileSync(
 );
 
 app.get("/", (req, res) => {
-  res.setHeader("Content-Type", "text/html");
-  res.send(mainHTML);
+  res.type("html").send(mainHTML);
 });
 
 app.get("/second", (req, res) => {
-  res.setHeader("Content-Type", "text/html");
-  res.send(secondHTML);
+  res.type("html").send(secondHTML);
 });
 
 // ---------- Favicon ----------
 app.get("/favicon.ico", (req, res) => res.status(204).end());
-app.get("/favicon.png", (req, res) =>
-  res.sendFile(path.join(__dirname, "../public/favicon.png"), (err) => {
-    if (err) res.status(204).end();
-  })
-);
+app.get("/favicon.png", (req, res) => {
+  const faviconPath = path.join(__dirname, "../public/favicon.png");
+  if (fs.existsSync(faviconPath)) {
+    res.sendFile(faviconPath);
+  } else {
+    res.status(204).end();
+  }
+});
 
+// ---------- Export serverless ----------
 module.exports = serverless(app);
