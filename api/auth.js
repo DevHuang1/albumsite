@@ -21,27 +21,27 @@ app.use(cookieParser());
 // Trust proxy (needed for serverless / Cloudflare / API Gateway)
 app.set("trust proxy", 1);
 
-// ---------- Rate Limiting ----------
-app.use(
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 150,
-    keyGenerator: (req) => ipKeyGenerator(req) || "unknown",
-    standardHeaders: true,
-    legacyHeaders: false,
-  })
-);
+// // ---------- Rate Limiting ----------
+// app.use(
+//   rateLimit({
+//     windowMs: 15 * 60 * 1000,
+//     max: 150,
+//     keyGenerator: (req) => ipKeyGenerator(req) || "unknown",
+//     standardHeaders: true,
+//     legacyHeaders: false,
+//   })
+// );
 
-app.use(
-  "/api/auth/login",
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 5,
-    keyGenerator: (req) => ipKeyGenerator(req) || "unknown",
-    standardHeaders: true,
-    legacyHeaders: false,
-  })
-);
+// app.use(
+//   "/api/auth/login",
+//   rateLimit({
+//     windowMs: 15 * 60 * 1000,
+//     max: 5,
+//     keyGenerator: (req) => ipKeyGenerator(req) || "unknown",
+//     standardHeaders: true,
+//     legacyHeaders: false,
+//   })
+// );
 
 // ---------- MongoDB Connection ----------
 let dbConnected = false;
@@ -50,9 +50,9 @@ app.use(async (req, res, next) => {
     try {
       await connectDB();
       dbConnected = true;
-      console.log("✅ MongoDB connected (lazy)");
+      console.log("MongoDB connected (lazy)");
     } catch (err) {
-      console.error("❌ DB connection failed:", err);
+      console.error("DB connection failed:", err);
       return res.status(500).json({ message: "Database connection failed" });
     }
   }
@@ -61,7 +61,7 @@ app.use(async (req, res, next) => {
 
 // ---------- API Routes ----------
 app.use("/api/auth", authRoutes);
-
+app.use(express.static(path.join(__dirname, "../public")));
 // ---------- Static HTML ----------
 const mainHTML = fs.readFileSync(
   path.join(__dirname, "../public/main/main.html"),
@@ -82,8 +82,6 @@ app.get("/favicon.ico", (req, res) => {
     if (err) res.status(204).end();
   });
 });
-
-// Remove favicon.png route entirely
 
 // ---------- Export serverless ----------
 module.exports = serverless(app);
