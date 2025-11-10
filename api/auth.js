@@ -10,7 +10,12 @@ const connectDB = require("../server/config/db");
 const authRoutes = require("../server/routes/authRoutes");
 
 const app = express();
-
+app.get("/favicon.ico", (req, res) => res.status(204).end());
+app.get("/favicon.png", (req, res) =>
+  res.sendFile(path.join(__dirname, "../public/favicon.png"), (err) => {
+    if (err) res.status(204).end();
+  })
+);
 // Middleware
 app.use(helmet());
 app.use(express.json());
@@ -86,7 +91,5 @@ app.get("/", (req, res) => {
   res.setHeader("Content-Type", "text/html");
   res.send(mainHTML);
 });
-
-app.get("/favicon.ico", (req, res) => res.status(204).end());
 
 module.exports = serverless(app);
