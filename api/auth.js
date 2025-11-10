@@ -10,12 +10,6 @@ const connectDB = require("../server/config/db");
 const authRoutes = require("../server/routes/authRoutes");
 
 const app = express();
-app.get("/favicon.ico", (req, res) => res.status(204).end());
-app.get("/favicon.png", (req, res) =>
-  res.sendFile(path.join(__dirname, "../public/favicon.png"), (err) => {
-    if (err) res.status(204).end();
-  })
-);
 // Middleware
 app.use(helmet());
 app.use(express.json());
@@ -59,9 +53,9 @@ app.use(async (req, res, next) => {
     try {
       await connectDB();
       dbConnected = true;
-      console.log("✅ MongoDB connected (lazy)");
+      console.log("MongoDB connected (lazy)");
     } catch (err) {
-      console.error("❌ DB connection failed:", err);
+      console.error("DB connection failed:", err);
       return res.status(500).json({ message: "Database connection failed" });
     }
   }
@@ -71,7 +65,8 @@ app.use(async (req, res, next) => {
 // API routes
 app.use("/api/auth", authRoutes);
 
-// Read HTML files into memory
+app.use(express.static(path.join(__dirname, "../public")));
+
 const mainHTML = fs.readFileSync(
   path.join(__dirname, "../public/main/main.html"),
   "utf-8"
