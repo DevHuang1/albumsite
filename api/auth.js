@@ -19,18 +19,21 @@ app.use(cookieParser());
 // Trust proxy (needed for serverless / Cloudflare / API Gateway)
 app.set("trust proxy", 1);
 
-// ---------- MongoDB Connection ----------
+// ---------- MongoDB Connection (lazy for serverless) ----------
 let dbConnected = false;
-app.use(async (req, res, next) => {
+const lazyConnectDB = async () => {
   if (!dbConnected) {
-    try {
-      await connectDB();
-      dbConnected = true;
-      console.log("✅ MongoDB connected (lazy)");
-    } catch (err) {
-      console.error("❌ DB connection failed:", err);
-      return res.status(500).json({ message: "Database connection failed" });
-    }
+    await connectDB();
+    dbConnected = true;
+    console.log("✅ MongoDB connected (lazy)");
+  }
+};
+app.use(async (req, res, next) => {
+  try {
+    await lazyConnectDB();
+  } catch (err) {
+    console.error("❌ DB connection failed:", err);
+    return res.status(500).json({ message: "Database connection failed" });
   }
   next();
 });
@@ -39,20 +42,32 @@ app.use(async (req, res, next) => {
 app.use("/api/auth", authRoutes);
 
 // ---------- Serve Static Files ----------
-app.use(express.static(path.join(__dirname, "../public")));
+const publicDir = path.join(__dirname, "../public");
+app.use(express.static(publicDir));
 
 // ---------- HTML Routes ----------
 const mainHTML = fs.readFileSync(
-  path.join(__dirname, "../public/main/main.html"),
+  path.join(publicDir, "main/main.html"),
   "utf-8"
 );
 const secondHTML = fs.readFileSync(
-  path.join(__dirname, "../public/second/second.html"),
+  path.join(publicDir, "second/second.html"),
   "utf-8"
 );
 
 app.get("/", (req, res) => res.type("html").send(mainHTML));
 app.get("/second", (req, res) => res.type("html").send(secondHTML));
+
+// ---------- Favicon ----------
+app.get("/favicon.ico", (req, res) => res.status(204).end());
+app.get("/favicon.png", (req, res) => {
+  const faviconPath = path.join(publicDir, "favicon.png");
+  if (fs.existsSync(faviconPath)) {
+    res.sendFile(faviconPath);
+  } else {
+    res.status(204).end();
+  }
+});
 
 // ---------- Export serverless ----------
 module.exports = serverless(app);
